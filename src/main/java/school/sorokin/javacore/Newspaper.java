@@ -1,4 +1,5 @@
 package school.sorokin.javacore;
+import java.util.Objects;
 
 public class Newspaper extends Publication implements Printable{
 
@@ -13,7 +14,10 @@ public class Newspaper extends Publication implements Printable{
         return publicationDay;
     }
 
-    public void setPublicationDay(String publicationDay) {
+    public void setPublicationDay(String publicationDay) throws IllegalAccessException {
+        if(publicationDay==null||publicationDay.isBlank()){
+            throw new IllegalAccessException("Некорректный день публикации");
+        }
         this.publicationDay = publicationDay;
     }
 
@@ -29,7 +33,7 @@ public class Newspaper extends Publication implements Printable{
 
     @Override
     public String toString(){
-        return "Тип публикации: "+getType()+" | Название: "+getTitle()+" | Издательство: "+getAuthor()+" | Год выпуска: "+getYear()+" | День публикации: "+getPublicationDay();
+        return getType()+" | "+getTitle()+" | "+getAuthor()+" | "+getYear()+" | "+getPublicationDay();
     }
 
     @Override
@@ -38,16 +42,13 @@ public class Newspaper extends Publication implements Printable{
         if (obj==null||getClass()!=obj.getClass()) return false;
         Newspaper newspaper=(Newspaper) obj;
         return getYear()==newspaper.getYear()&&
-                newspaper.getTitle()!=null ? getTitle().equals(newspaper.getTitle()) : newspaper.getTitle()==null&&
-                newspaper.getAuthor() != null ? getAuthor().equals(newspaper.getAuthor()) : newspaper.getAuthor()==null&&
-                newspaper.getPublicationDay()!=null ? getPublicationDay().equals(newspaper.getPublicationDay()) : newspaper.publicationDay==null;
+               Objects.equals(getTitle(), newspaper.getTitle())&&
+               Objects.equals(getAuthor(), newspaper.getAuthor())&&
+               Objects.equals(getPublicationDay(), newspaper.getPublicationDay());
     }
 
     @Override
     public int hashCode(){
-        int authorHashCode=getAuthor()!=null ? getAuthor().hashCode() : 0;
-        int titleHashCode=getTitle() !=null ? getTitle().hashCode() : 0;
-        int publicationDayHashCode= getPublicationDay()!=null ? getPublicationDay().hashCode() : 0;
-        return 31*authorHashCode+titleHashCode+publicationDayHashCode+getYear();
+        return Objects.hash(getTitle(), getAuthor(), getYear(), getPublicationDay());
     }
 }

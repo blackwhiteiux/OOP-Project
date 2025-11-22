@@ -1,4 +1,5 @@
 package school.sorokin.javacore;
+import java.util.Objects;
 
 public class Magazine extends Publication implements Printable{
     private int  issueNumber;
@@ -13,7 +14,14 @@ public class Magazine extends Publication implements Printable{
     }
 
     public void setIssueNumber(int issueNumber) {
-        this.issueNumber = issueNumber;
+        if(issueNumber<=0){
+            System.out.println("Введите корректное значение.");
+        }
+            try {
+                this.issueNumber = issueNumber;
+            } catch (NumberFormatException e){
+                System.out.println("Введите число.");
+            }
     }
 
     @Override
@@ -28,7 +36,7 @@ public class Magazine extends Publication implements Printable{
 
     @Override
     public String toString(){
-        return "Тип публикации: "+getType()+" | Название: "+getTitle()+" | Издательство: "+getAuthor()+" | Год выпуска: "+getYear()+" | Номер выпуска: "+getIssueNumber();
+        return getType()+" | "+getTitle()+" | "+getAuthor()+" | "+getYear()+" | "+getIssueNumber();
     }
 
     @Override
@@ -38,15 +46,13 @@ public class Magazine extends Publication implements Printable{
         Magazine magazine=(Magazine) obj;
         return this.getIssueNumber()==magazine.getIssueNumber()&&
                 getYear()==magazine.getYear()&&
-                magazine.getTitle()!=null ? getTitle().equals(magazine.getTitle()) : magazine.getTitle()==null&&
-                magazine.getAuthor()!=null ? getAuthor().equals(magazine.getAuthor()) : magazine.getAuthor()==null;
-
+                Objects.equals(getTitle(), magazine.getTitle())&&
+                Objects.equals(getAuthor(), magazine.getAuthor())&&
+                getIssueNumber()==magazine.getIssueNumber();
     }
 
     @Override
     public int hashCode(){
-        int titleHashCode=getTitle()!=null ? getTitle().hashCode() : 0;
-        int authorHashCode=getAuthor()!=null ? getAuthor().hashCode() : 0;
-        return 31*titleHashCode+authorHashCode+getYear()+getIssueNumber();
+        return Objects.hash(getTitle(), getAuthor(), getYear(), getIssueNumber());
     }
 }
